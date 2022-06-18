@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<!-- Custom view: https://www.youtube.com/watch?v=BIcjT2Zz4bU -->
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        async function callback() {
+            let Uf = document.getElementById('uf');
+            let uf = Uf.options[Uf.selectedIndex].value;
+            let Municipio = document.getElementById('municipio');
+            let municipio = Municipio.options[Municipio.selectedIndex].value;
+            let response = await fetch(`/callback/getMap?&uf=${uf}&municipio_id=${municipio}`);
+            if (response.ok) {
+                let mapJson = await response.json();
+                if (response.ok) {
+                    Plotly.react('map', JSON.parse(mapJson['Map']), {});
+                } else {
+                    alert("HTTP-Error: " + response.status + "on index.html callback");
+                }
+            } else {
+                alert("HTTP-Error: " + response.status + "on index.html callback");
+            }
+        }
+    </script>
+
+</head>
+
+     <div class="container">
+        <div class="row">
+            <div class="col">
+                <label for="uf-select">Pla:</label>
+                <select id="uf" name="uf-select" class="form-select" aria-label="Select" onchange="callback()">
+                   {% for key, value in ufs.items() %}
+                        <option value="{{ key }}">
+                            {{ value }}</option>
+                    {%  endfor %}
+                </select>
+            </div>
+            <div class="col">
+                <label for="municipio-select">Pla:</label>
+                <select id="municipio" name="municipio-select" class="form-select" aria-label="Select" onchange="callback()">
+                   {% for key, value in municipios.items() %}
+                        <option value="{{ key }}">
+                            {{ value }}</option>
+                    {%  endfor %}
+                </select>
+            </div>
+            <div class="row-9">
+                <div id="map" class="chart" style="height: 800px"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>callback();</script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
