@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script>
+        var selectedUf = ""
         async function callback() {
             let Uf = document.getElementById('uf');
             let uf = Uf.options[Uf.selectedIndex].value;
@@ -14,7 +15,21 @@
             if (response.ok) {
                 let mapJson = await response.json();
                 if (response.ok) {
-                    Plotly.react('map', JSON.parse(mapJson['Map']), {});
+                    Plotly.react('map', JSON.parse(mapJson['Map']), {})
+                    let municipios = JSON.parse(mapJson['municipios'])
+                    if (selectedUf !== uf)
+                    {
+                        while (Municipio.options.length > 0) {
+                            Municipio.remove(0);
+                        }
+                        for (let key in municipios) {
+                            let option = document.createElement('option');
+                            option.value = key;
+                            option.text = municipios[key];
+                            Municipio.add(option);
+                        }
+                        selectedUf = uf
+                    }
                 } else {
                     alert("HTTP-Error: " + response.status + "on index.html callback");
                 }
@@ -41,13 +56,12 @@
                 <label for="municipio-select">Pla:</label>
                 <select id="municipio" name="municipio-select" class="form-select" aria-label="Select" onchange="callback()">
                    {% for key, value in municipios.items() %}
-                        <option value="{{ key }}">
-                            {{ value }}</option>
+                        <option value="{{ key }}">{{ value }}</option>
                     {%  endfor %}
                 </select>
             </div>
             <div class="row-9">
-                <div id="map" class="chart" style="height: 800px"></div>
+                <div id="map" class="chart" style="height: 800px; width:800px"></div>
             </div>
         </div>
     </div>

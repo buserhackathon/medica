@@ -17,7 +17,8 @@ def callbacks(endpoint):
     args = request.args
     if endpoint == 'getMap':
         return json.dumps({'Map': map_support.getFigUBSs(args.get('uf'),
-                                                         args.get('municipio_id'))})
+                                                         args.get('municipio_id')),
+                           'municipios': json.dumps(map_support.getMunicipios(args.get('uf')))})
 
 if __name__ == '__main__':
         app.run(debug=True)

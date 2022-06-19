@@ -4,6 +4,8 @@ import json
 import numpy as np
 import dbquery
 
+mapbox_access_token = 'pk.eyJ1IjoiYXNzaXNtYXVybyIsImEiOiJja3RvcGt2eTgwZXc5Mm9taGd6MTltZ2o2In0.FJ2GqIssNuJxeYh0ewTpLw'
+
 
 def geoWhere(uf: str, municipio_id: int = None) -> str:
     if municipio_id == '0':
@@ -17,12 +19,10 @@ def getUFs() -> dict:
 
 
 def getMunicipios(uf: str) -> dict:
-    return dbquery.getDictResultset(f"""select * from (
-select '0' as id, '(Todos)' as name union
-select id, name from municipio
+    return dbquery.getDictResultset(f"""
+select concat('i',cast(id as varchar)) as id, name from municipio
 where state = '{uf}'
-) a
-order by ascii(name), name""")
+order by capital desc, name""")
 
 
 def getUBSs(uf, municipio_id):
@@ -31,7 +31,15 @@ def getUBSs(uf, municipio_id):
                                        f"from ubs {where}")
     gjson = dbquery.getJSONResultset(
         f"select json_build_object('type', 'FeatureCollection','features', json_agg(ST_AsGeoJSON(t.*)::json)) "
-        f"from (select id, nom_estab, geom from ubs {where}) "
+        f"from (select id, nom_estab, st_buffer(geom,0.001) as geometry from ubs {where}) "
+        "as t(id, nom_estab, geometry)")
+
+    df_mun = dbquery.getDataframeResultSet(f"select  id, name as nom_estab "
+                                       f"from municipio where state = 'AC' limit 1")
+
+    gjson_mun = dbquery.getJSONResultset(
+        f"select json_build_object('type', 'FeatureCollection','features', json_agg(ST_AsGeoJSON(t.*)::json)) "
+        f"from (select id, name as nom_estab, geom as geometry from municipio where state = 'AC' limit 1) "
         "as t(id, nom_estab, geometry)")
 
     centroid_extent = dbquery.executeSQL(
@@ -48,25 +56,27 @@ from
            from ubs
            {where}) a
 group by buffer
-""").first()
+""")[0]
 
     extent = centroid_extent[2]
-    if extent[0] is not None:
-        values = extent[0].replace(',', ' ').replace('(', ' ').replace(')', ' ').split(' ')
+    if extent is not None:
+        values = extent.replace(',', ' ').replace('(', ' ').replace(')', ' ').split(' ')
         max_bound = max(abs(float(values[1]) - float(values[3])),
                         abs(float(values[2]) - float(values[4]))) * 111  # km/degree
-        zoom = 13.5 - np.log(max_bound)
+        zoom = 17.5 - np.log(max_bound)
     else:
         zoom = 13.5
 
     return df, gjson, {"lat": centroid_extent[1], "lon": centroid_extent[0]}, zoom
+    #return df_mun, gjson_mun, {"lat": centroid_extent[1], "lon": centroid_extent[0]}, zoom
+
 
 def getFigUBSs(uf, municipio_id) -> str:
-    area, geo, centroid, zoom = getUBSs(uf, municipio_id)
-    fig = px.choropleth_mapbox(area, geojson=geo, color=area.id,
-                               locations=area.id, featureidkey="properties.id",
+    ubss, geo, centroid, zoom = getUBSs(uf, int(municipio_id.replace('i', '')))
+    fig = px.choropleth_mapbox(ubss, geojson=geo, color=ubss.id,
+                               locations=ubss.id, featureidkey="properties.id",
                                center=centroid,
-                               hover_name=area.name, hover_data={'id': False},
+                               hover_name=ubss.nom_estab, hover_data={'id': False},
                                mapbox_style="carto-positron", zoom=zoom)
     fig.update_layout(
         mapbox_style="white-bg",

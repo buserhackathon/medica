@@ -31,7 +31,7 @@ def getDictResultset(sql):
 
 
 def getJSONResultset(sql):
-    return executeSQL(sql).first()[0]
+    return getValueFromDb(sql)
 
 
 def getDataframeResultSet(sql):
