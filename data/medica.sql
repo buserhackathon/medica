@@ -1,3 +1,4 @@
+-- TODO: Atualizar esse arquivo
 -- public.adp_deficiencia_fisica_idoso definition
 
 -- Drop table

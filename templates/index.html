@@ -44,7 +44,7 @@
      <div class="container">
         <div class="row">
             <div class="col">
-                <label for="uf-select">Pla:</label>
+                <label for="uf-select">UF:</label>
                 <select id="uf" name="uf-select" class="form-select" aria-label="Select" onchange="callback()">
                    {% for key, value in ufs.items() %}
                         <option value="{{ key }}">
@@ -53,7 +53,7 @@
                 </select>
             </div>
             <div class="col">
-                <label for="municipio-select">Pla:</label>
+                <label for="municipio-select">Cidade:</label>
                 <select id="municipio" name="municipio-select" class="form-select" aria-label="Select" onchange="callback()">
                    {% for key, value in municipios.items() %}
                         <option value="{{ key }}">{{ value }}</option>

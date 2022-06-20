@@ -16,6 +16,7 @@ def index():
 def callbacks(endpoint):
     args = request.args
     if endpoint == 'getMap':
+        # TODO: remover parâmetro uf da função abaixo
         return json.dumps({'Map': map_support.getFigUBSs(args.get('uf'),
                                                          args.get('municipio_id')),
                            'municipios': json.dumps(map_support.getMunicipios(args.get('uf')))})
