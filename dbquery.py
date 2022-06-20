@@ -1,7 +1,7 @@
 import psycopg2
 import pandas as pd
 
-db_url = 'postgresql+psycopg2://mauroassis:Hibisco@12@127.0.0.1:5432/medica'
+db_url = 'postgresql+psycopg2://medica:acidem@12@127.0.0.1:5432/medica'
 
 
 def connectDB():

@@ -12,10 +12,12 @@ def geoWhere(municipio_id: int = None) -> str:
 
 
 def getUFs() -> dict:
+    #TODO: adicionar DISTINCT
     return dbquery.getDictResultset("select state, state from municipio order by state")
 
 
 def getMunicipios(uf: str) -> dict:
+    # TODO: substituir concat por ||
     return dbquery.getDictResultset(f"""
 select concat('i',cast(id as varchar)) as id, name from municipio
 where state = '{uf}'
@@ -36,7 +38,7 @@ def getUBSs(uf, municipio_id):
     gjson = dbquery.getJSONResultset(
         f"select json_build_object('type', 'FeatureCollection','features', json_agg(ST_AsGeoJSON(t.*)::json)) "
         f"from (select id, "
-        f"st_buffer(geom,0.0005) as geometry "
+        f"st_buffer(geom,0.0003) as geometry "
         f"from ubs {where}) "
         f"as t(id, geometry)")
     #
