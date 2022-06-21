@@ -12,14 +12,12 @@ def geoWhere(municipio_id: int = None) -> str:
 
 
 def getUFs() -> dict:
-    #TODO: adicionar DISTINCT
-    return dbquery.getDictResultset("select state, state from municipio order by state")
+    return dbquery.getDictResultset("select distinct state, state from municipio order by state")
 
 
 def getMunicipios(uf: str) -> dict:
-    # TODO: substituir concat por ||
     return dbquery.getDictResultset(f"""
-select concat('i',cast(id as varchar)) as id, name from municipio
+select 'i' || cast(id as varchar) as id, name from municipio
 where state = '{uf}'
 order by capital desc, name""")
 
