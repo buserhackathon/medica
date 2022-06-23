@@ -1,1 +1,3 @@
-envmedica/  
+envmedica/
+__pycache__/
+venv/
