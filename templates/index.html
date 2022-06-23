@@ -1,11 +1,22 @@
 <!DOCTYPE html>
 <!-- Custom view: https://www.youtube.com/watch?v=BIcjT2Zz4bU -->
- 
+
 
 
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/mainpage.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/resetmainpage.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Oswald&family=Red+Hat+Display:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <script src="https://kit.fontawesome.com/d0acf8ba83.js" crossorigin="anonymous"></script>
+
+    <title></title>
+
     <script>
         var selectedUf = ""
         async function callback() {
@@ -19,8 +30,7 @@
                 if (response.ok) {
                     Plotly.react('map', JSON.parse(mapJson['Map']), {})
                     let municipios = JSON.parse(mapJson['municipios'])
-                    if (selectedUf !== uf)
-                    {
+                    if (selectedUf !== uf) {
                         while (Municipio.options.length > 0) {
                             Municipio.remove(0);
                         }
@@ -40,36 +50,199 @@
             }
         }
     </script>
+
 </head>
 
-     <div class="container">
-        <div class="row">
+<!--  Cabeçalho  -->
+<div class="header">
+
+    <!--gambiarra monstra-->
+    <input type="checkbox" id="check">
+    <label for="check" id="icone" class="displaynone"></label>
+    <!--fim da gambiarra monstra-->
+
+    <div class="barra">	
+        <nav>
+            <h1 class="titulo-4">Ranking</h1>
+            <a href=""><div class="link">melhor acessibilidade para deficientes.</div></a>
+            <a href=""><div class="link">melhor estrutura física.</div></a>
+            <a href=""><div class="link">melhor estoque de remédio.</div></a>
+      
+        </nav>	
+    </div>
+
+    <div class="head-1">
+        <h1 class="titulo-1"> MedicaBR </h1>
+        <a href="" class="ancoras"> Projeto</a>
+        <a href="" class="ancoras"> Contato </a>
+        <a href="" class="ancoras">Como Fizemos</a>
+    </div>
+
+    <div class="head-2">
+        <a href="" class="ancoras flex-end">Login </a>
+        <div class="button-4"> Sign Up
+
+        </div>
+
+    </div>
+
+</div>
+
+<!--corpo pagina-->
+
+<!-- conteudo 1 -->
+<div class="flex-direction-row">
+    <div class="conteudo-1">
+        <h1 class="titulo-2">Muito além de um mapeamento de UBS </h1>
+        <p class="paragrafo margin-2">Nosso projeto foi ousado ao ponto de simular um estóque integrado,
+            conectando varios estoques de UBS.</p>
+
+        <button class="button-3"> Veja </utton>
+    </div>
+
+    <div class="infos">
+        <!-- onde ficarao os dados -->
+        <img src="{{ url_for('static',filename='styles/remedio.png') }}" alt="">
+
+    </div>
+</div>
+
+
+<!-- Maurao q fez daqui pra baixo -->
+<div class="content_mid">
+    <div class="bloco_selects">
+        <!-- select 1 -->
+        <div class="bloco_col">
             <div class="col">
-                <label for="uf-select">UF:</label>
+                <label for="uf-select">
+                    <h2 class="h2">Estado:</h2>
+                </label>
                 <select id="uf" name="uf-select" class="form-select" aria-label="Select" onchange="callback()">
-                   {% for key, value in ufs.items() %}
-                        <option value="{{ key }}">
-                            {{ value }}</option>
-                    {%  endfor %}
+                    {% for key, value in ufs.items() %}
+                    <option value="{{ key }}">
+                        {{ value }}</option>
+                    {% endfor %}
                 </select>
             </div>
+
+        </div>
+        <!-- select 2 -->
+        <div class="bloco_col_2">
             <div class="col">
-                <label for="municipio-select">Cidade:</label>
-                <select id="municipio" name="municipio-select" class="form-select" aria-label="Select" onchange="callback()">
-                   {% for key, value in municipios.items() %}
-                        <option value="{{ key }}">{{ value }}</option>
-                    {%  endfor %}
+                <label for="municipio-select">
+                    <h2 class="h2">Cidade:</h2>
+                </label>
+                <select id="municipio" name="municipio-select" class="form-select" aria-label="Select"
+                    onchange="callback()">
+                    {% for key, value in municipios.items() %}
+                    <option value="{{ key }}">{{ value }}</option>
+                    {% endfor %}
                 </select>
             </div>
-            <div class="row-9">
-                <div id="map" class="chart" style="height: 800px"></div>
+        </div>
+    </div>
+
+    <div class="ranking-2">
+        <div class="ranking">
+            <label for="check" id="icone">
+                <div class="bloco_ranking">
+                    <p class="titulo-3">Ranking UBS</p> <input type="checkbox" id="check">
+                    <i class="fa-solid fa-ranking-star icones"></i>
+                </div>
+            </label>
+            <div class="barra">
+    
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+    <div class="row">
+        <div class="mapa" id="ola">
+            <div class="container">
+                <div class="row-9">
+                    <div id="map" class="chart" style="height: 800px"></div>
+                </div>
             </div>
         </div>
     </div>
 
 
-    <script>callback();</script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <div class="dados"><P class="titulo-2"> DADOS DADOS DADOS DADOS DADOS DADOS DADOS DADOS  DADOS DADOS D
+        ADOS DADOS DADOS DADOS DADOS  DADOS DADOS DADOS DADOS DADOS DADOS DADOS DADOS DADOS DADOS DADOS DADO
+        S DADOS DADOS DADOS DADOS DADOS DADOS DADOS DADOS DADOS DADOS DADOS DADOS DADOS DADOS DADOS DADOS DADO
+        DADOS DADOS DADOS DADOS DADOS DADOS DADOS DADOS DADOS DADOS
+        DADOS DADOS DADOS DADOS DADOS DADOS DADOS DADOS DADO DADOS DADOS DADOS DADOS DADOS DADOS DADOS DADOSS DADOS DADOS DADOS DADOS DADOS DADOS DADOS DADOS DADOS</P></div>
+ 
+</div>
+
+<div class="legenda">
+     <h1 class="titulo-2">Legenda mapa de UBS</h1>
+     <div class="divs-ranks"><div class="circulo"></div><p class="plegenda">Bom</p></div>
+     <div class="divs-ranks"><div class="circulo-2"></div><p class="plegenda">Mediano</p></div>
+     <div class="divs-ranks"><div class="circulo-3"></div><p class="plegenda">ruim</p></div>
+
+</div>
+
+<!---Rodape-->
+<div class="roda-pe-preto text-baixo">
+   
+    <div>
+      <h1 class="titulo-baixo">Medica</h1>
+    </div>
+
+
+    <div> 
+      <h1 class="subtitulo-baixo">Features</h1>
+          <div class="paragrafo-baixo">
+            <p>Link Shortening</p>
+            <p>Branded links</p>
+            <p>Analytics</p>
+
+          </div>
+    </div>
+
+    
+    <div> 
+      <h1 class="subtitulo-baixo">Resources</h1>
+      <div class="paragrafo-baixo">
+      <p>Blog</p>
+      <p>Developers</p>
+      <p>Support</p>
+      </div>
+    </div>
+
+    
+    <div> 
+      <h1 class="subtitulo-baixo">Company</h1>
+      <div class="paragrafo-baixo">
+      <p>About</p>
+      <p>Our Team</p>
+      <p>Carreers</p>
+      <p>Contact</p>
+      </div>
+    </div>
+
+
+    <div> 
+      <i class="fa-brands fa-facebook-square icones-2"></i>
+      <i class="fa-brands fa-twitter icones-2"></i>
+      <i class="fa-brands fa-pinterest icones-2"></i>
+      <i class="fa-brands fa-instagram icones-2"></i>
+    </div>
+</div>
+
+
+
+
+
+
+
+<script>callback();</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
