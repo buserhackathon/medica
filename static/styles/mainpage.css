@@ -299,11 +299,12 @@ body{
 
 .barra{
 	background-color: #333;
-	height: 230%;
+	height: 287%;
 	width: 500px;
 	position: absolute;
 	left: -500px;
 	transition: all .2s linear;
+  z-index: 2;
 }
 
 .barra .link{
